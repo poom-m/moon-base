@@ -1,63 +1,83 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">client</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
-    </div>
+  <div>
+    <b-container class="py-5">
+      <b-row class="justify-content-center">
+        <b-col cols="6">
+          <BlockSection class="price-block">
+            <h1 class="price-section">
+              MOON = <span data-atd="moon-price-label">50</span> THBT
+            </h1>
+            <h3 class="balance-section">
+              You have <span data-atd="balance-label">100</span> THBT
+            </h3>
+          </BlockSection>
+
+          <BlockSection>
+            <form>
+              <b-form-group label="Amount to buy (THBT)" label-for="thbtInput">
+                <b-form-input
+                  id="thbtInput"
+                  v-model="thbtInput"
+                  data-atd="thbt-input"
+                />
+              </b-form-group>
+
+              <b-form-group label="Amount MOON" label-for="moonInput">
+                <b-form-input
+                  id="moonInput"
+                  v-model="moonInput"
+                  data-atd="moon-input"
+                />
+              </b-form-group>
+
+              <b-form-group
+                label="Slippage Tolerance (%)"
+                label-for="slippageInput"
+              >
+                <b-form-input
+                  id="slippageInput"
+                  v-model="slippageInput"
+                  data-atd="slippage-input"
+                />
+              </b-form-group>
+
+              <b-button
+                type="submit"
+                size="lg"
+                pill
+                variant="primary"
+                data-atd="buy-btn"
+              >
+                Buy
+              </b-button>
+            </form>
+          </BlockSection>
+        </b-col>
+      </b-row>
+    </b-container>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      thbtInput: 0,
+      moonInput: 0,
+      slippageInput: 0,
+    }
+  },
+}
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+<style lang="scss" scoped>
+.price-block {
   text-align: center;
-}
+  color: $primary;
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+  .price-section,
+  .balance-section {
+    font-weight: 700;
+  }
 }
 </style>

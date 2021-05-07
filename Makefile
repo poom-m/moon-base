@@ -50,12 +50,18 @@ build-no-cache:
 rebuild: down build
 
 # Run terminal of the php container
-php:
+exec-php:
 	docker-compose exec php bash
 
 # Run terminal of the client container
-client:
+exec-client:
 	docker-compose exec client /bin/sh
+
+# Run terminal of the php container alias
+ep: exec-php
+
+# Run terminal of the client container alias
+ec: exec-client
 
 
 #-----------------------------------------------------------
