@@ -30,6 +30,7 @@ export default {
   modules: ['bootstrap-vue/nuxt', '@nuxtjs/axios', '@nuxtjs/style-resources'],
 
   bootstrapVue: {
+    icons: true,
     bootstrapCSS: false,
     bootstrapVueCSS: false,
   },

@@ -1,8 +1,14 @@
 <template>
   <div class="sidebar">
     <div class="nav-block">
-      <NuxtLink to="/" class="nav-button">Buy</NuxtLink>
-      <NuxtLink to="/history" class="nav-button">History</NuxtLink>
+      <NuxtLink to="/" class="nav-button">
+        <b-icon-cash-stack />
+        <span>Buy</span>
+      </NuxtLink>
+      <NuxtLink to="/history" class="nav-button">
+        <b-icon-book />
+        <span>History</span>
+      </NuxtLink>
     </div>
   </div>
 </template>
@@ -19,6 +25,7 @@
     flex-direction: column;
 
     .nav-button {
+      font-size: 18px;
       display: block;
       font-weight: bold;
       height: 48px;
@@ -39,7 +46,12 @@
         display: block;
         position: absolute;
         left: 0;
-        background-color: #1fc8d4;
+        background-color: #7cc659;
+      }
+
+      span {
+        margin-left: 10px;
+        font-size: 16px;
       }
     }
   }
