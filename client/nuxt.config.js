@@ -1,6 +1,6 @@
 export default {
   head: {
-    title: 'client',
+    title: 'MoonBase',
     htmlAttrs: {
       lang: 'en',
     },

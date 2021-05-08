@@ -1,13 +1,12 @@
 <template>
   <div class="main-wrapper">
-    <Sidebar />
     <Nuxt />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Default',
+  name: 'Blank',
 }
 </script>
 

@@ -16,6 +16,11 @@
             You have
             <span data-atd="balance-label">{{ balance_thbt }}</span> THBT
           </h3>
+
+          <!-- <h4 class="balance-text">
+            Available
+            <span data-atd="balance-label">{{ crypto.balance }}</span> MOON
+          </h4> -->
         </BlockSection>
 
         <BlockSection v-if="$fetchState.pending" class="form-block-loading">
@@ -72,8 +77,16 @@
               />
             </b-form-group>
 
-            <b-button pill variant="primary" data-atd="buy-btn" @click="buy">
-              Buy
+            <b-button
+              class="buy-btn"
+              pill
+              variant="primary"
+              data-atd="buy-btn"
+              :disabled="submitDisabled"
+              @click="buy"
+            >
+              <b-spinner v-if="loading" small />
+              <span>Buy</span>
             </b-button>
           </form>
         </BlockSection>
@@ -94,11 +107,18 @@ export default {
       amount_crypto: 0,
       slippage: 0,
       focus: null,
+      loading: false,
     }
   },
 
   async fetch() {
     this.crypto = (await this.$axios.$get('/api/get/1'))?.data
+  },
+
+  computed: {
+    submitDisabled() {
+      return this.loading || this.amount_thbt === 0 || this.amount_crypto === 0
+    },
   },
 
   watch: {
@@ -126,7 +146,6 @@ export default {
           this.amount_crypto = 0
         })
       } else if (value > this.crypto.balance) {
-        console.log(value, this.crypto.balance)
         this.$nextTick(() => {
           this.amount_crypto = this.crypto.balance
         })
@@ -137,16 +156,32 @@ export default {
   },
 
   methods: {
-    buy() {
-      const response = this.$axios.post('/api/buy', {
-        crypto_id: 1,
-        user_id: 'AAA',
-        amount_thbt: this.amount_thbt,
-        amount_crypto: this.amount_crypto,
-        slippage: this.slippage,
-      })
+    async buy() {
+      this.loading = true
 
-      console.log(response)
+      try {
+        await this.$axios.post('/api/buy', {
+          crypto_id: 1,
+          user_id: 'AAA',
+          amount_thbt: this.amount_thbt,
+          amount_crypto: this.amount_crypto,
+          slippage: this.slippage,
+        })
+
+        this.$store.commit('order/update', {
+          amount_crypto: this.amount_crypto,
+          amount_thbt: this.amount_thbt,
+          crypto: this.crypto,
+        })
+
+        this.$router.push('/success')
+      } catch (error) {
+        if (error.response.data.message)
+          this.$store.commit('error/update', error.response.data.message)
+        this.$router.push('/error')
+      }
+
+      this.loading = false
     },
   },
 }
