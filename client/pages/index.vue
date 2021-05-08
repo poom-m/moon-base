@@ -20,13 +20,8 @@
 
             <p class="balance-text">
               You have
-              <span data-atd="balance-label">{{ balance_thbt }}</span> THBT
+              <span data-atd="balance-label">{{ user.balance_thbt }}</span> THBT
             </p>
-
-            <!-- <h4 class="balance-text">
-              Available
-              <span data-atd="balance-label">{{ crypto.balance }}</span> MOON
-            </h4> -->
           </template>
         </BlockSection>
 
@@ -53,7 +48,7 @@
                   v-model="amount_thbt"
                   type="number"
                   min="0"
-                  :max="balance_thbt"
+                  :max="user.balance_thbt"
                   data-atd="thbt-input"
                   @focus="focus = 'thbt'"
                   @blur="focus = null"
@@ -109,13 +104,14 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
+
 export default {
   name: 'Index',
 
   data() {
     return {
       crypto: null,
-      balance_thbt: 100,
       amount_thbt: 0,
       amount_crypto: 0,
       slippage: 0,
@@ -129,6 +125,10 @@ export default {
   },
 
   computed: {
+    user() {
+      return this.$store.state.user.detail
+    },
+
     submitDisabled() {
       return this.loading || this.amount_thbt === 0 || this.amount_crypto === 0
     },
@@ -142,9 +142,9 @@ export default {
         this.$nextTick(() => {
           this.amount_thbt = 0
         })
-      } else if (value > this.balance_thbt) {
+      } else if (value > this.user.balance_thbt) {
         this.$nextTick(() => {
-          this.amount_thbt = this.balance_thbt
+          this.amount_thbt = this.user.balance_thbt
         })
       }
 
@@ -168,6 +168,10 @@ export default {
     },
   },
 
+  mounted() {
+    if (!this.user.id) this.$store.commit('user/updateId', uuidv4())
+  },
+
   methods: {
     async buy() {
       this.loading = true
@@ -175,11 +179,17 @@ export default {
       try {
         await this.$axios.post('/api/orders', {
           crypto_id: 1,
-          user_id: 'AAA',
+          user_id: this.user.id,
           amount_thbt: this.amount_thbt,
           amount_crypto: this.amount_crypto,
           slippage: this.slippage,
+          balance_thbt: this.user.balance_thbt,
         })
+
+        this.$store.commit(
+          'user/updateBalance',
+          this.user.balance_thbt - this.amount_thbt
+        )
 
         this.$store.commit('order/update', {
           amount_crypto: this.amount_crypto,

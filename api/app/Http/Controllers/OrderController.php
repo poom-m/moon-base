@@ -20,6 +20,11 @@ class OrderController extends Controller
             'message' => 'Crypto not found'
         ], 404);
 
+        // Check sufficient thbt balance
+        if ($request->balance_thbt < $request->amount_thbt) return response()->json([
+            'message' => 'Insufficient THBT balance'
+        ], 400);
+
         // Check sufficient crypto balance
         if ($crypto->balance < $request->amount_crypto) return response()->json([
             'message' => 'Insufficient ' . $crypto->name . ' balance'

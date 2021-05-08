@@ -28,7 +28,8 @@ class OrderRequest extends FormRequest
             'user_id' => 'required|max:255',
             'amount_thbt' => 'required|numeric',
             'amount_crypto' => 'required|numeric',
-            'slippage' => 'required|numeric|between:0,1'
+            'slippage' => 'required|numeric|between:0,1',
+            'balance_thbt' => 'required|numeric'
         ];
     }
 }
