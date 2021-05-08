@@ -38,4 +38,20 @@ export default {
   styleResources: {
     scss: ['~/assets/scss/_variables.scss'],
   },
+
+  axios: {
+    baseURL: 'http://localhost:8080', // Used as fallback if no runtime config is provided
+  },
+
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.API_URL_BROWSER,
+    },
+  },
+
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.API_URL,
+    },
+  },
 }
