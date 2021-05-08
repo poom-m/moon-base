@@ -4,13 +4,13 @@
       <b-col cols="6">
         <BlockSection class="price-block">
           <template v-if="$fetchState.pending">
-            <b-skeleton class="price-loading"></b-skeleton>
-            <b-skeleton class="balance-loading"></b-skeleton>
+            <b-skeleton class="price-loading" />
+            <b-skeleton class="balance-loading" />
           </template>
 
-          <template v-else-if="$fetchState.error">
-            <h2 class="error-text">Error loading crypto</h2>
-          </template>
+          <h2 v-else-if="$fetchState.error" class="error-text">
+            Error loading crypto
+          </h2>
 
           <template v-else>
             <h1 class="price-text">
@@ -32,14 +32,14 @@
 
         <BlockSection v-if="!$fetchState.error" class="form-block">
           <template v-if="$fetchState.pending">
-            <b-skeleton class="label-loading"></b-skeleton>
-            <b-skeleton class="input-loading"></b-skeleton>
-            <b-skeleton class="label-loading"></b-skeleton>
-            <b-skeleton class="input-loading"></b-skeleton>
-            <b-skeleton class="label-loading"></b-skeleton>
-            <b-skeleton class="input-loading"></b-skeleton>
-            <b-skeleton class="label-loading"></b-skeleton>
-            <b-skeleton class="input-loading"></b-skeleton>
+            <b-skeleton class="label-loading" />
+            <b-skeleton class="input-loading" />
+            <b-skeleton class="label-loading" />
+            <b-skeleton class="input-loading" />
+            <b-skeleton class="label-loading" />
+            <b-skeleton class="input-loading" />
+            <b-skeleton class="label-loading" />
+            <b-skeleton class="input-loading" />
           </template>
 
           <template v-else>
@@ -125,7 +125,7 @@ export default {
   },
 
   async fetch() {
-    this.crypto = (await this.$axios.$get('/api/get/1'))?.data
+    this.crypto = (await this.$axios.$get('/api/cryptos/1'))?.data
   },
 
   computed: {
@@ -173,7 +173,7 @@ export default {
       this.loading = true
 
       try {
-        await this.$axios.post('/api/buy', {
+        await this.$axios.post('/api/orders', {
           crypto_id: 1,
           user_id: 'AAA',
           amount_thbt: this.amount_thbt,

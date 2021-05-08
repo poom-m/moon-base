@@ -1,11 +1,28 @@
 <template>
   <b-container class="py-5">
     <BlockSection class="balance-block">
-      <div class="balance-section">MOON left {{ moonBalance }} MOON</div>
+      <b-skeleton v-if="$fetchState.pending" class="balance-loading" />
+
+      <h2 v-else-if="$fetchState.error" class="error-text">
+        Error loading crypto
+      </h2>
+
+      <div v-else class="balance-section">
+        {{ crypto.name }} left {{ crypto.balance }} {{ crypto.name }}
+      </div>
     </BlockSection>
 
-    <BlockSection>
-      <b-table-lite hover :items="orders" class="mb-0" />
+    <BlockSection v-if="!$fetchState.error">
+      <b-skeleton-table v-if="$fetchState.pending" :rows="5" :columns="5" />
+
+      <b-table-lite
+        v-else-if="orders.length"
+        hover
+        :items="orders"
+        class="mb-0"
+      />
+
+      <h2 v-else class="error-text">No history yet</h2>
     </BlockSection>
   </b-container>
 </template>
@@ -14,40 +31,45 @@
 export default {
   data() {
     return {
-      moonBalance: 1000,
-      orders: [
-        {
-          date_time: '2021-04-01 10:00:00',
-          ID: 'AAA',
-          THBT: 100,
-          MOON: 2,
-          RATE: '1 MOON = 50 THBT | 0.02',
-        },
-        {
-          date_time: '2021-04-01 10:00:00',
-          ID: 'BBB',
-          THBT: 100,
-          MOON: 2,
-          RATE: '1 MOON = 50 THBT | 0.02',
-        },
-        {
-          date_time: '2021-04-01 10:00:00',
-          ID: 'BBB',
-          THBT: 100,
-          MOON: 2,
-          RATE: '1 MOON = 50 THBT | 0.02',
-        },
-      ],
+      crypto: null,
+      orders: [],
     }
+  },
+
+  async fetch() {
+    this.crypto = (await this.$axios.$get('/api/cryptos/1'))?.data
+
+    const orderResponse = (await this.$axios.$get('/api/orders'))?.data
+
+    this.orders = orderResponse.map((order) => {
+      return {
+        date_time: order.date_time,
+        ID: order.user_id,
+        THBT: order.amount_thbt,
+        MOON: order.amount_crypto,
+        RATE: `${order.amount_crypto} ${order.crypto} = ${
+          order.amount_thbt
+        } THBT | ${order.amount_crypto / order.amount_thbt}`,
+      }
+    })
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .balance-block {
+  .balance-loading {
+    width: 260px;
+    height: 24px;
+  }
   .balance-section {
     font-size: 24px;
     font-weight: 700;
   }
+}
+
+.error-text {
+  margin-bottom: 0;
+  font-size: 20px;
 }
 </style>

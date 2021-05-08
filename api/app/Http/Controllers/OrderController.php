@@ -3,11 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Models\Crypto;
 use App\Models\Order;
 
 class OrderController extends Controller
 {
+    public function index() {
+        return OrderResource::collection(Order::all());
+    }
+
     public function create(OrderRequest $request) {
         // Get crypto instance
         $crypto = Crypto::find($request->crypto_id);

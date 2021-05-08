@@ -16,5 +16,6 @@ use App\Http\Controllers\OrderController;
 |
 */
 
-Route::get('/get/{id}', [CryptoController::class, 'show']);
-Route::post('/buy', [OrderController::class, 'create']);
+Route::get('/cryptos/{id}', [CryptoController::class, 'show']);
+Route::get('/orders', [OrderController::class, 'index']);
+Route::post('/orders', [OrderController::class, 'create']);
