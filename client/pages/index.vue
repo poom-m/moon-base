@@ -2,93 +2,106 @@
   <b-container class="py-5">
     <b-row class="justify-content-center">
       <b-col cols="6">
-        <BlockSection v-if="$fetchState.pending" class="price-block-loading">
-          <b-skeleton class="price-loading"></b-skeleton>
-          <b-skeleton class="balance-loading"></b-skeleton>
+        <BlockSection class="price-block">
+          <template v-if="$fetchState.pending">
+            <b-skeleton class="price-loading"></b-skeleton>
+            <b-skeleton class="balance-loading"></b-skeleton>
+          </template>
+
+          <template v-else-if="$fetchState.error">
+            <h2 class="error-text">Error loading crypto</h2>
+          </template>
+
+          <template v-else>
+            <h1 class="price-text">
+              {{ crypto.name }} =
+              <span data-atd="crypto-price-label">{{ crypto.price }}</span> THBT
+            </h1>
+
+            <p class="balance-text">
+              You have
+              <span data-atd="balance-label">{{ balance_thbt }}</span> THBT
+            </p>
+
+            <!-- <h4 class="balance-text">
+              Available
+              <span data-atd="balance-label">{{ crypto.balance }}</span> MOON
+            </h4> -->
+          </template>
         </BlockSection>
-        <BlockSection v-else class="price-block">
-          <h1 class="price-text">
-            {{ crypto.name }} =
-            <span data-atd="crypto-price-label">{{ crypto.price }}</span> THBT
-          </h1>
 
-          <h3 class="balance-text">
-            You have
-            <span data-atd="balance-label">{{ balance_thbt }}</span> THBT
-          </h3>
+        <BlockSection v-if="!$fetchState.error" class="form-block">
+          <template v-if="$fetchState.pending">
+            <b-skeleton class="label-loading"></b-skeleton>
+            <b-skeleton class="input-loading"></b-skeleton>
+            <b-skeleton class="label-loading"></b-skeleton>
+            <b-skeleton class="input-loading"></b-skeleton>
+            <b-skeleton class="label-loading"></b-skeleton>
+            <b-skeleton class="input-loading"></b-skeleton>
+            <b-skeleton class="label-loading"></b-skeleton>
+            <b-skeleton class="input-loading"></b-skeleton>
+          </template>
 
-          <!-- <h4 class="balance-text">
-            Available
-            <span data-atd="balance-label">{{ crypto.balance }}</span> MOON
-          </h4> -->
-        </BlockSection>
+          <template v-else>
+            <form>
+              <b-form-group
+                label="Amount to buy (THBT)"
+                label-for="amount_thbt"
+              >
+                <b-form-input
+                  id="amount_thbt"
+                  v-model="amount_thbt"
+                  type="number"
+                  min="0"
+                  :max="balance_thbt"
+                  data-atd="thbt-input"
+                  @focus="focus = 'thbt'"
+                  @blur="focus = null"
+                />
+              </b-form-group>
 
-        <BlockSection v-if="$fetchState.pending" class="form-block-loading">
-          <b-skeleton class="label-loading"></b-skeleton>
-          <b-skeleton class="input-loading"></b-skeleton>
-          <b-skeleton class="label-loading"></b-skeleton>
-          <b-skeleton class="input-loading"></b-skeleton>
-          <b-skeleton class="label-loading"></b-skeleton>
-          <b-skeleton class="input-loading"></b-skeleton>
-          <b-skeleton class="label-loading"></b-skeleton>
-          <b-skeleton class="input-loading"></b-skeleton>
-        </BlockSection>
-        <BlockSection v-else class="form-block">
-          <form>
-            <b-form-group label="Amount to buy (THBT)" label-for="amount_thbt">
-              <b-form-input
-                id="amount_thbt"
-                v-model="amount_thbt"
-                type="number"
-                min="0"
-                :max="balance_thbt"
-                data-atd="thbt-input"
-                @focus="focus = 'thbt'"
-                @blur="focus = null"
-              />
-            </b-form-group>
+              <b-form-group
+                :label="`Amount ${crypto.name}`"
+                label-for="amount_crypto"
+              >
+                <b-form-input
+                  id="amount_crypto"
+                  v-model="amount_crypto"
+                  type="number"
+                  min="0"
+                  :max="crypto.balance"
+                  data-atd="moon-input"
+                  @focus="focus = 'crypto'"
+                  @blur="focus = null"
+                />
+              </b-form-group>
 
-            <b-form-group
-              :label="`Amount ${crypto.name}`"
-              label-for="amount_crypto"
-            >
-              <b-form-input
-                id="amount_crypto"
-                v-model="amount_crypto"
-                type="number"
-                min="0"
-                :max="crypto.balance"
-                data-atd="moon-input"
-                @focus="focus = 'crypto'"
-                @blur="focus = null"
-              />
-            </b-form-group>
+              <b-form-group
+                label="Slippage Tolerance (%)"
+                label-for="slippageInput"
+              >
+                <b-form-input
+                  id="slippageInput"
+                  v-model="slippage"
+                  type="number"
+                  min="0"
+                  data-atd="slippage-input"
+                />
+              </b-form-group>
 
-            <b-form-group
-              label="Slippage Tolerance (%)"
-              label-for="slippageInput"
-            >
-              <b-form-input
-                id="slippageInput"
-                v-model="slippage"
-                type="number"
-                min="0"
-                data-atd="slippage-input"
-              />
-            </b-form-group>
-
-            <b-button
-              class="buy-btn"
-              pill
-              variant="primary"
-              data-atd="buy-btn"
-              :disabled="submitDisabled"
-              @click="buy"
-            >
-              <b-spinner v-if="loading" small />
-              <span>Buy</span>
-            </b-button>
-          </form>
+              <b-button
+                class="buy-btn"
+                pill
+                variant="primary"
+                data-atd="buy-btn"
+                :disabled="submitDisabled"
+                @click="buy"
+              >
+                <b-spinner v-if="loading" small />
+                <span>Buy</span>
+              </b-button>
+            </form>
+          </template>
         </BlockSection>
       </b-col>
     </b-row>
@@ -188,7 +201,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.price-block-loading {
+.price-block {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -202,16 +215,17 @@ export default {
     width: 50%;
     height: 28px;
   }
-}
 
-.price-block {
-  text-align: center;
-  color: $primary;
+  .error-text {
+    margin-bottom: 0;
+    font-size: 20px;
+  }
 
   .price-text,
   .balance-text {
     font-weight: 700;
     margin-bottom: 0;
+    color: $primary;
   }
 
   .price-text {
@@ -223,7 +237,7 @@ export default {
   }
 }
 
-.form-block-loading {
+.form-block {
   .label-loading {
     width: 35%;
     height: 20px;
