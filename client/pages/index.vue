@@ -141,8 +141,10 @@ export default {
 
   watch: {
     async amount_thbt(value) {
+      // Only execute when user focus on THBT field
       if (this.focus !== 'thbt') return
 
+      // Not allow < 0 or > balance
       if (value < 0) {
         this.$nextTick(() => {
           this.amount_thbt = 0
@@ -153,6 +155,7 @@ export default {
         })
       }
 
+      // Convert THBT to crypto
       try {
         this.amountCryptoDisabled = true
         const response = await this.$axios({
@@ -165,6 +168,7 @@ export default {
           progress: false,
         })
 
+        // Update crypto field
         this.amount_crypto = response.data.amount_crypto
         this.amountCryptoDisabled = false
       } catch (error) {
@@ -174,9 +178,11 @@ export default {
       }
     },
 
-    amount_crypto(value) {
+    async amount_crypto(value) {
+      // Only execute when user focus on crypto field
       if (this.focus !== 'crypto') return
 
+      // Not allow < 0 or > balance
       if (value < 0) {
         this.$nextTick(() => {
           this.amount_crypto = 0
@@ -187,7 +193,27 @@ export default {
         })
       }
 
-      this.amount_thbt = value * this.crypto.price
+      // Convert crypto to THBT
+      try {
+        this.amountThbtDisabled = true
+        const response = await this.$axios({
+          method: 'get',
+          url: '/api/crypto-to-thbt',
+          params: {
+            crypto_id: 1,
+            amount_crypto: value,
+          },
+          progress: false,
+        })
+
+        // Update THBT field
+        this.amount_thbt = response.data.amount_thbt
+        this.amountThbtDisabled = false
+      } catch (error) {
+        if (error.response.data.message)
+          this.$store.commit('error/update', error.response.data)
+        this.$router.push('/error')
+      }
     },
   },
 

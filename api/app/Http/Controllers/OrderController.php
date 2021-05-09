@@ -29,6 +29,21 @@ class OrderController extends Controller
         return response()->json($convertCrypto);
     }
 
+    public function cryptoToThbt($crypto_id = null, $amount_crypto = null) {
+        // Get parameter values
+        $crypto_id = $crypto_id ?? request()->crypto_id;
+        $crypto = Crypto::find($crypto_id);
+        if (!$crypto) return response()->json([
+            'message' => 'Crypto not found.'
+        ], 404);
+        $amount_crypto = $amount_crypto ?? request()->amount_crypto;
+
+        // Convert crypto to THBT
+        $convertThbt = $crypto->cryptoToThbt($amount_crypto);
+
+        return response()->json($convertThbt);
+    }
+
     public function create(OrderRequest $request) {
         // Get crypto instance
         $crypto = Crypto::find($request->crypto_id);

@@ -51,7 +51,7 @@ class Crypto extends Model
         $tier = $this->currentTier;
         $price = $this->currentPrice;
 
-        $crypto_balance_current_tier = 10 - ( (1000 - $balance) - ($tier * 10)); // How many crypto left in this tier
+        $crypto_balance_current_tier = 10 - ( (1000 - $balance) - ($tier * 10) ); // How many crypto left in this tier
 
         $value_current_tier = $price * $crypto_balance_current_tier;
         $remaining_value_current_tier = $value_current_tier - $amount_thbt;
@@ -74,6 +74,32 @@ class Crypto extends Model
         return [
             'amount_crypto' => $amount_crypto,
             'remaining_crypto' => $remaining_crypto
+        ];
+    }
+
+    public function cryptoToThbt($amount_crypto) {        
+        $balance = $this->balance;
+        $tier = $this->currentTier;
+        $price = $this->currentPrice;
+
+        $crypto_balance_current_tier = 10 - ( (1000 - $balance) - ($tier * 10) ); // How many crypto left in this tier
+        $remaining_crypto_current_tier = $crypto_balance_current_tier - $amount_crypto; // -5
+
+        if ($remaining_crypto_current_tier > 0) { // Buy within current tier (normal case)
+            $amount_thbt = $amount_crypto * $price;
+        } else { // Buy over current tier (edge case)
+            // Current tier amount
+            $current_tier_amount_thbt = $crypto_balance_current_tier * $price;
+
+            // Next tier amount
+            $next_tier_price = $this->base_price * ( pow(1.1, ($tier + 1)) );
+            $next_tier_amount_thbt = abs($remaining_crypto_current_tier) * $next_tier_price;
+
+            $amount_thbt = $current_tier_amount_thbt + $next_tier_amount_thbt;
+        }
+
+        return [
+            'amount_thbt' => $amount_thbt,
         ];
     }
 }
