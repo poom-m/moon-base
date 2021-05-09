@@ -16,7 +16,7 @@ class CreateCryptosTable extends Migration
         Schema::create('cryptos', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->double('price');
+            $table->double('base_price');
             $table->double('balance');
             $table->timestamps();
         });

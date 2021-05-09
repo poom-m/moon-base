@@ -48,7 +48,7 @@ class OrderController extends Controller
 
         // Check if user send correct exchange rate
         $convertCrypto = $crypto->thbtToCrypto($request->amount_thbt);
-        if ($request->amount_crypto != $convertCrypto['amount_crypto']) return response()->json([
+        if (round($request->amount_crypto, 10) != round($convertCrypto['amount_crypto'], 10)) return response()->json([
             'message' => 'Incorrect exchange rate detected. Please try again.'
         ], 400);
 
@@ -58,7 +58,7 @@ class OrderController extends Controller
         $order->user_id = $request->user_id;
         $order->amount_thbt = $request->amount_thbt;
         $order->amount_crypto = $request->amount_crypto;
-        $order->price = $crypto->price;
+        $order->price = $crypto->current_price;
         $order->slippage = $request->slippage;
         $order->save();
 

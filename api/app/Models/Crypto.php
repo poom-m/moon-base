@@ -12,7 +12,6 @@ class Crypto extends Model
     |--------------------------------------------------------------------------
     */
     protected $casts = [
-        'price' => 'float',
         'balance' => 'float'
     ];
 
@@ -27,15 +26,31 @@ class Crypto extends Model
 
     /*
     |--------------------------------------------------------------------------
+    | ACCESSORS
+    |--------------------------------------------------------------------------
+    */
+    public function getCurrentTierAttribute() {
+        // Tier start at 0, every 10 crypto sold will goes up by 1 tier
+        return floor((1000 - $this->balance) / 10);
+    }
+
+    public function getCurrentPriceAttribute() {
+        $multiplier = pow(1.1, $this->currentTier); // multiplier increase 10% every tier
+        $currentPrice = $this->base_price * $multiplier; // price for current tier
+
+        return $currentPrice;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
     | METHODS
     |--------------------------------------------------------------------------
     */
     public function thbtToCrypto($amount_thbt) {        
         $balance = $this->balance;
-        $base_price = $this->price;
-        $tier = floor((1000 - $balance) / 10); // change tier every 10 crypto sold
-        $multiplier = pow(1.1, $tier); // increase 10% every tier
-        $price = $base_price * $multiplier; // price for current tier
+        $tier = $this->currentTier;
+        $price = $this->currentPrice;
+
         $crypto_balance_current_tier = 10 - ( (1000 - $balance) - ($tier * 10)); // How many crypto left in this tier
 
         $value_current_tier = $price * $crypto_balance_current_tier;
@@ -48,7 +63,7 @@ class Crypto extends Model
             $current_tier_amount_crypto = $value_current_tier / $price;
 
             // Next tier amount
-            $next_tier_price = $base_price * ( pow(1.1, ($tier + 1)) );
+            $next_tier_price = $this->base_price * ( pow(1.1, ($tier + 1)) );
             $next_tier_amount_crypto = abs($remaining_value_current_tier) / $next_tier_price;
 
             $amount_crypto = $current_tier_amount_crypto + $next_tier_amount_crypto;

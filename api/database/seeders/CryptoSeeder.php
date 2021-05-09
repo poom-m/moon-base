@@ -16,7 +16,7 @@ class CryptoSeeder extends Seeder
     {
         DB::table('cryptos')->insert([
             'name' => 'MOON',
-            'price' => 50,
+            'base_price' => 50,
             'balance' => 1000,
             'created_at' => now(),
             'updated_at' => now()

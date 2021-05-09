@@ -17,7 +17,7 @@ class CryptoResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'price' => $this->price,
+            'price' => $this->current_price,
             'balance' => $this->balance
         ];
     }
