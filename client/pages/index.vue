@@ -49,6 +49,7 @@
                   type="number"
                   min="0"
                   :max="user.balance_thbt"
+                  :disabled="amountThbtDisabled"
                   data-atd="thbt-input"
                   @focus="focus = 'thbt'"
                   @blur="focus = null"
@@ -65,6 +66,7 @@
                   type="number"
                   min="0"
                   :max="crypto.balance"
+                  :disabled="amountCryptoDisabled"
                   data-atd="moon-input"
                   @focus="focus = 'crypto'"
                   @blur="focus = null"
@@ -80,6 +82,7 @@
                   v-model="slippage"
                   type="number"
                   min="0"
+                  max="100"
                   data-atd="slippage-input"
                 />
               </b-form-group>
@@ -117,6 +120,8 @@ export default {
       slippage: 0,
       focus: null,
       loading: false,
+      amountThbtDisabled: false,
+      amountCryptoDisabled: false,
     }
   },
 
@@ -135,7 +140,7 @@ export default {
   },
 
   watch: {
-    amount_thbt(value) {
+    async amount_thbt(value) {
       if (this.focus !== 'thbt') return
 
       if (value < 0) {
@@ -148,7 +153,25 @@ export default {
         })
       }
 
-      this.amount_crypto = value / this.crypto.price
+      try {
+        this.amountCryptoDisabled = true
+        const response = await this.$axios({
+          method: 'get',
+          url: '/api/thbt-to-crypto',
+          params: {
+            crypto_id: 1,
+            amount_thbt: value,
+          },
+          progress: false,
+        })
+
+        this.amount_crypto = response.data.amount_crypto
+        this.amountCryptoDisabled = false
+      } catch (error) {
+        if (error.response.data.message)
+          this.$store.commit('error/update', error.response.data)
+        this.$router.push('/error')
+      }
     },
 
     amount_crypto(value) {
@@ -182,7 +205,7 @@ export default {
           user_id: this.user.id,
           amount_thbt: this.amount_thbt,
           amount_crypto: this.amount_crypto,
-          slippage: this.slippage,
+          slippage: this.slippage / 100,
           balance_thbt: this.user.balance_thbt,
         })
 
@@ -200,7 +223,7 @@ export default {
         this.$router.push('/success')
       } catch (error) {
         if (error.response.data.message)
-          this.$store.commit('error/update', error.response.data.message)
+          this.$store.commit('error/update', error.response.data)
         this.$router.push('/error')
       }
 

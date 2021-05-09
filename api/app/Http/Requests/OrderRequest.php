@@ -26,8 +26,8 @@ class OrderRequest extends FormRequest
         return [
             'crypto_id' => 'required|numeric',
             'user_id' => 'required|max:255',
-            'amount_thbt' => 'required|numeric',
-            'amount_crypto' => 'required|numeric',
+            'amount_thbt' => 'required|numeric|gt:0',
+            'amount_crypto' => 'required|numeric|gt:0',
             'slippage' => 'required|numeric|between:0,1',
             'balance_thbt' => 'required|numeric'
         ];

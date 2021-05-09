@@ -27,7 +27,12 @@ export default {
 
   buildModules: ['@nuxtjs/eslint-module'],
 
-  modules: ['bootstrap-vue/nuxt', '@nuxtjs/axios', '@nuxtjs/style-resources'],
+  modules: [
+    'bootstrap-vue/nuxt',
+    'nuxt-axios-duplicate-blocker',
+    '@nuxtjs/axios',
+    '@nuxtjs/style-resources',
+  ],
 
   bootstrapVue: {
     icons: true,

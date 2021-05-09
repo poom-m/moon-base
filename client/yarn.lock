@@ -1283,7 +1283,7 @@
     webpack-node-externals "^2.5.2"
     webpackbar "^4.0.0"
 
-"@nuxtjs/axios@^5.13.1":
+"@nuxtjs/axios@^5.13.1", "@nuxtjs/axios@^5.5.2":
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/@nuxtjs/axios/-/axios-5.13.1.tgz#70c7444e6be8989372c249637f9287c844340f42"
   integrity sha512-vZpXV2AAkQ5Duejubt1k3ZgUnYowYnPvmcUt0hskd+OebmQ+jF6Wk6rOG0/9EeknOxm7mtTGgKSwdlE1jDo+xA==
@@ -5836,6 +5836,14 @@ num2fraction@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"
   integrity sha1-b2gragJ6Tp3fpFZM0lidHU5mnt4=
+
+nuxt-axios-duplicate-blocker@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/nuxt-axios-duplicate-blocker/-/nuxt-axios-duplicate-blocker-1.1.1.tgz#54e970fa68772c71339e4a18ad86d3975ab4fa1c"
+  integrity sha512-AcNETuYXdVpWh9hHwRnic7N/R0wM8b7TSxoY3I9RJ+EBeUqFgOlAGcV8jdBnOr+TdCJsSGtWgMSuGI4R5cWV6w==
+  dependencies:
+    "@nuxtjs/axios" "^5.5.2"
+    lodash "^4.17.15"
 
 nuxt@^2.15.3:
   version "2.15.4"

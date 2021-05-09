@@ -1,9 +1,9 @@
 export const state = () => ({
-  message: null,
+  detail: null,
 })
 
 export const mutations = {
-  update(state, message) {
-    state.message = message
+  update(state, error) {
+    state.detail = error
   },
 }

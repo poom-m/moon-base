@@ -19,3 +19,4 @@ use App\Http\Controllers\OrderController;
 Route::get('/cryptos/{id}', [CryptoController::class, 'show']);
 Route::get('/orders', [OrderController::class, 'index']);
 Route::post('/orders', [OrderController::class, 'create']);
+Route::get('/thbt-to-crypto', [OrderController::class, 'thbtToCrypto']);
