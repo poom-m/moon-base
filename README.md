@@ -33,7 +33,29 @@ make build
 docker-compose up -d --build
 ```
 
-**2. Run database migration to create database structure**
+**2. Install composer packages**
+
+```
+# Make command
+make composer-install
+
+# or Full command
+docker-compose exec php composer install
+```
+
+**3. Copy env files**
+
+```
+# Make command
+make env-api
+make env-client
+
+# or Full command
+cp .env.api api/.env
+cp .env.client client/.env
+```
+
+**3. Run database migration to create database structure**
 
 ```
 # Make command
@@ -43,7 +65,7 @@ make db-migrate
 docker-compose exec php php artisan migrate
 ```
 
-**3. Run database seeder to populate required data**
+**4. Run database seeder to populate required data**
 
 ```
 # Make command
@@ -53,11 +75,11 @@ make db-seed
 docker-compose exec php php artisan db:seed
 ```
 
-**4. Done! Connect to the server via browser**
+**5. Done! Connect to the server via browser**
 
 [http://localhost:8080](http://localhost:8080)
 
-_If you see the 502 error page, just wait a moment to let front end server build and compile code or check the status with command `make logs-client` or `docker-compose logs client`_
+_If you see the 502 error page, just wait a moment to let front end server build and compile code or check the status with command `make logs-client` or `docker-compose logs client`. If problem still presist please try restarting client using `make restart-client` or docker-compose restart client._
 
 ## Database
 
