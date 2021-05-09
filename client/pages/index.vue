@@ -259,6 +259,7 @@ export default {
     font-weight: 700;
     margin-bottom: 0;
     color: $primary;
+    text-align: center;
   }
 
   .price-text {

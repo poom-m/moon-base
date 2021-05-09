@@ -3,11 +3,11 @@
     <div class="nav-block">
       <NuxtLink to="/" class="nav-button">
         <b-icon-cash-stack />
-        <span>Buy</span>
+        <span class="nav-text">Buy</span>
       </NuxtLink>
       <NuxtLink to="/history" class="nav-button">
         <b-icon-book />
-        <span>History</span>
+        <span class="nav-text">History</span>
       </NuxtLink>
     </div>
   </div>
@@ -16,9 +16,19 @@
 <style lang="scss" scoped>
 .sidebar {
   position: fixed;
-  width: 250px;
+  width: 50px;
   height: 100vh;
   background: #fff;
+  transition: 0.25s ease;
+  z-index: 1;
+
+  &:hover {
+    width: 250px;
+
+    .nav-block .nav-button .nav-text {
+      opacity: 1;
+    }
+  }
 
   .nav-block {
     display: flex;
@@ -49,9 +59,11 @@
         background-color: #7cc659;
       }
 
-      span {
+      .nav-text {
+        opacity: 0;
         margin-left: 10px;
         font-size: 16px;
+        transition: 0.25s ease;
       }
     }
   }

@@ -11,7 +11,7 @@ use App\Models\Order;
 class OrderController extends Controller
 {
     public function index() {
-        return OrderResource::collection(Order::all());
+        return OrderResource::collection(Order::orderBy('created_at', 'desc')->get());
     }
 
     public function thbtToCrypto($crypto_id = null, $amount_thbt = null) {
