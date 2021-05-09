@@ -23,27 +23,7 @@ This project include following technical stacks:
 
 ## Installation
 
-**1. Run the build script (it may take up to 10 minutes)**
-
-```
-# Make command
-make build
-
-# or Full command
-docker-compose up -d --build
-```
-
-**2. Install composer packages**
-
-```
-# Make command
-make composer-install
-
-# or Full command
-docker-compose exec php composer install
-```
-
-**3. Copy env files**
+**1. Copy env files**
 
 ```
 # Make command
@@ -53,6 +33,26 @@ make env-client
 # or Full command
 cp .env.api api/.env
 cp .env.client client/.env
+```
+
+**2. Run the build script (it may take up to 10 minutes)**
+
+```
+# Make command
+make build
+
+# or Full command
+docker-compose up -d --build
+```
+
+**3. Install composer packages**
+
+```
+# Make command
+make composer-install
+
+# or Full command
+docker-compose exec php composer install
 ```
 
 **3. Run database migration to create database structure**
