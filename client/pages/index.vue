@@ -15,7 +15,7 @@
           <template v-else>
             <h1 class="price-text">
               {{ crypto.name }} =
-              <span data-atd="crypto-price-label">{{ crypto.price }}</span> THBT
+              <span data-atd="moon-price-label">{{ crypto.price }}</span> THBT
             </h1>
 
             <p class="balance-text">
