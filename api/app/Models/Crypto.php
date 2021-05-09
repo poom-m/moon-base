@@ -69,12 +69,7 @@ class Crypto extends Model
             $amount_crypto = $current_tier_amount_crypto + $next_tier_amount_crypto;
         }
 
-        $remaining_crypto = $balance - $amount_crypto;
-
-        return [
-            'amount_crypto' => $amount_crypto,
-            'remaining_crypto' => $remaining_crypto
-        ];
+        return $amount_crypto;
     }
 
     public function cryptoToThbt($amount_crypto) {        
@@ -98,8 +93,6 @@ class Crypto extends Model
             $amount_thbt = $current_tier_amount_thbt + $next_tier_amount_thbt;
         }
 
-        return [
-            'amount_thbt' => $amount_thbt,
-        ];
+        return $amount_thbt;
     }
 }

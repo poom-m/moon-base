@@ -226,7 +226,8 @@ export default {
       this.loading = true
 
       try {
-        await this.$axios.post('/api/orders', {
+        // Buy request
+        const response = await this.$axios.post('/api/orders', {
           crypto_id: 1,
           user_id: this.user.id,
           amount_thbt: this.amount_thbt,
@@ -234,6 +235,10 @@ export default {
           slippage: this.slippage / 100,
           balance_thbt: this.user.balance_thbt,
         })
+
+        // Update real amount used to purchase
+        this.amount_thbt = response.data.amount_thbt
+        this.amount_crypto = response.data.amount_crypto
 
         this.$store.commit(
           'user/updateBalance',

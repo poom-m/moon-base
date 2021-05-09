@@ -65,7 +65,7 @@ class BuyTest extends TestCase
         ]);
         $response->dump();
         $response->assertJson([
-            'message' => 'Incorrect exchange rate detected. Please try again.',
+            'message' => 'Incorrect exchange rate or exceed slippage tolerance. Please try again.',
         ]);
     }
 }
